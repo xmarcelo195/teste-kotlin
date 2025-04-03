@@ -5,16 +5,20 @@
     android:orientation="vertical"
     android:padding="90dp">
 
-    <Button
-        android:id="@+id/btn_scan"
+    <TextView
+        android:id="@+id/connection_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Buscar Dispositivos BLE"/>
+        android:text="Status da Conexão: Desconectado"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/txt_devices"
-        android:layout_width="match_parent"
+        android:id="@+id/heart_rate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dispositivos encontrados:"
-        android:paddingTop="16dp"/>
+        android:text="Batimento Cardíaco: -- bpm"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp" />
+
 </LinearLayout>
