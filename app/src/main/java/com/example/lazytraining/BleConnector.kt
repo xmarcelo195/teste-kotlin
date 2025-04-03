@@ -16,8 +16,9 @@ class BleConnector(private val context: Context, private val statusTextView: Tex
 
     private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     private var bluetoothGatt: BluetoothGatt? = null
+    private var isRecording = false
+    private val heartRateData = mutableListOf<Pair<Long, Int>>()
 
-    // UUIDs padrão para o serviço e característica de batimento cardíaco
     private val HEART_RATE_SERVICE_UUID = UUID.fromString("0000180D-0000-1000-8000-00805F9B34FB")
     private val HEART_RATE_MEASUREMENT_UUID = UUID.fromString("00002A37-0000-1000-8000-00805F9B34FB")
     private val CLIENT_CHARACTERISTIC_CONFIG_UUID = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB")
@@ -29,7 +30,7 @@ class BleConnector(private val context: Context, private val statusTextView: Tex
                     (context as? MainActivity)?.runOnUiThread {
                         statusTextView.text = "Status da Conexão: Conectado"
                     }
-                    gatt.discoverServices() // Descobre os serviços após conectar
+                    gatt.discoverServices()
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     (context as? MainActivity)?.runOnUiThread {
@@ -48,7 +49,7 @@ class BleConnector(private val context: Context, private val statusTextView: Tex
                         gatt.setCharacteristicNotification(heartRateCharacteristic, true)
                         val descriptor = heartRateCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG_UUID)
                         descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                        gatt.writeDescriptor(descriptor) // Habilita notificações
+                        gatt.writeDescriptor(descriptor)
                     } else {
                         Log.e("BLE", "Característica de batimento não encontrada")
                     }
@@ -63,6 +64,9 @@ class BleConnector(private val context: Context, private val statusTextView: Tex
                 val heartRate = parseHeartRate(characteristic)
                 (context as? MainActivity)?.runOnUiThread {
                     heartRateTextView.text = "Batimento Cardíaco: $heartRate bpm"
+                }
+                if (isRecording) {
+                    heartRateData.add(Pair(System.currentTimeMillis(), heartRate))
                 }
             }
         }
@@ -87,5 +91,15 @@ class BleConnector(private val context: Context, private val statusTextView: Tex
         bluetoothGatt?.disconnect()
         bluetoothGatt?.close()
         bluetoothGatt = null
+    }
+
+    fun startRecording() {
+        isRecording = true
+        heartRateData.clear()
+    }
+
+    fun stopRecording(): List<Pair<Long, Int>> {
+        isRecording = false
+        return heartRateData.toList()
     }
 }

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="90dp">
+    android:layout_marginTop="50dp"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/connection_status"
@@ -20,5 +21,20 @@
         android:text="Batimento Cardíaco: -- bpm"
         android:textSize="16sp"
         android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/start_recording_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Iniciar Gravação"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/stop_recording_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Parar Gravação"
+        android:layout_marginTop="8dp"
+        android:enabled="false" />
 
 </LinearLayout>
